@@ -5,6 +5,8 @@ from typing import Optional, Tuple
 import numpy as np
 import torch
 
+import yolo.models.experimental
+import yolo.utils.datasets
 import yolo.utils.general
 
 if "YOLO_PATH" not in os.environ:
