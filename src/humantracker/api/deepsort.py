@@ -4,10 +4,10 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 
-from deepsort.detection import Detection
-from deepsort.generate_detections import create_box_encoder
-from deepsort.nn_matching import NearestNeighborDistanceMetric
-from deepsort.tracker import Tracker
+import deepsort.detection
+import deepsort.generate_detections
+import deepsort.nn_matching
+import deepsort.tracker
 
 
 class DeepSORTTracker:
@@ -24,9 +24,13 @@ class DeepSORTTracker:
         nn_budget: int = None,
         kf: object = None,
     ) -> None:
-        self.encoder = create_box_encoder(reid_model, batch_size=1)
-        self.tracker = Tracker(
-            NearestNeighborDistanceMetric("cosine", cosine_thresh, nn_budget),
+        self.encoder = deepsort.generate_detections.create_box_encoder(
+            reid_model, batch_size=1
+        )
+        self.tracker = deepsort.tracker.Tracker(
+            deepsort.nn_matching.NearestNeighborDistanceMetric(
+                "cosine", cosine_thresh, nn_budget
+            ),
             max_age=max_track_age,
             kf=kf,
         )
@@ -45,7 +49,9 @@ class DeepSORTTracker:
         final set of bounding boxes, which are then drawn onto the input image
         """
         feats = self.encoder(frame, bboxes)
-        dets = [Detection(*args) for args in zip(bboxes, scores, feats)]
+        dets = [
+            deepsort.detection.Detection(*args) for args in zip(bboxes, scores, feats)
+        ]
 
         # refine the detections
         self.tracker.predict()
