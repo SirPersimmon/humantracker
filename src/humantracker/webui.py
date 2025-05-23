@@ -17,36 +17,53 @@ import analyzer
 MAX_FILE_SIZE = 100 * 1024 * 1024  # 100MB
 
 
-def process_video(detector: str, video_bytes: bytes) -> Tuple[bytes, dict]:
-    try:
-        with (
-            tempfile.NamedTemporaryFile(suffix=".mp4") as input_file,
-            tempfile.NamedTemporaryFile(suffix=".webm") as output_file,
-        ):
-            input_file.write(video_bytes)
+def cast_detector_value(detector):
+    result = None
+    match detector:
+        case "YOLO":
+            result = analyzer.DetectorType.YOLO
+        case "OpenPose":
+            result = analyzer.DetectorType.OPENPOSE
+    return result
 
-            match detector:
-                case "YOLO":
-                    detector_type = analyzer.DetectorType.YOLO
-                case "OpenPose":
-                    detector_type = analyzer.DetectorType.OPENPOSE
-            task = analyzer.Analyzer(
-                detector_type, input_file.name, output_file.name, "VP80"
-            )
 
-            task.run()
+def cast_area_value(area):
+    result = None
+    if area:
+        try:
+            result = [int(x) for x in area.split(",") if int(x) >= 0]
+            if len(result) != 4 or result[0] > result[2] or result[1] > result[3]:
+                raise ValueError
+        except ValueError:
+            raise ValueError("Incorrect area settings")
+    return result
 
-            video = output_file.read()
-            stats = task.get_stats()
 
-        return video, stats
-    except Exception as e:
-        st.error(f"Error processing image: {str(e)}")
-        return None, None
+def process_video(video_bytes: bytes, detector: str, area: str) -> Tuple[bytes, dict]:
+    with (
+        tempfile.NamedTemporaryFile(suffix=".mp4") as input_file,
+        tempfile.NamedTemporaryFile(suffix=".webm") as output_file,
+    ):
+        input_file.write(video_bytes)
+
+        task = analyzer.Analyzer(
+            cast_detector_value(detector),
+            input_file.name,
+            output_file.name,
+            fourcc="VP80",
+            area=cast_area_value(area),
+        )
+
+        task.run()
+
+        video = output_file.read()
+        stats = task.get_stats()
+
+    return video, stats
 
 
 def analyze_video(
-    detector: str, upload: st.runtime.uploaded_file_manager.UploadedFile
+    upload: st.runtime.uploaded_file_manager.UploadedFile, detector: str, area: str
 ) -> None:
     try:
         start_time = time.time()
@@ -61,7 +78,7 @@ def analyze_video(
         status_text.text("Processing video...")
         progress_bar.progress(30)
 
-        video, stats = process_video(detector, video_bytes)
+        video, stats = process_video(video_bytes, detector, area)
         if video is None or stats is None:
             return
 
@@ -84,7 +101,7 @@ def analyze_video(
         st.error(f"An error occurred: {str(e)}")
         st.sidebar.error("Failed to process video")
         # Log the full error for debugging.
-        print(f"Error in fix_image: {traceback.format_exc()}")
+        print(f"Error in analyze_video: {traceback.format_exc()}")
 
 
 st.set_page_config(layout="wide", page_title="Human Tracker")
@@ -116,6 +133,9 @@ with st.sidebar.expander("ℹ️ Video Guidelines"):
 
 with st.sidebar:
     my_detector = st.radio("Select detector", ["YOLO", "OpenPose"])
+    my_area = st.text_input(
+        "Limit area to", help="left,top,right,bottom", placeholder="All frame"
+    )
 
 # Process the video.
 if my_upload is not None:
@@ -124,6 +144,6 @@ if my_upload is not None:
             f"The uploaded file is too large. Please upload a video smaller than {MAX_FILE_SIZE/1024/1024:.1f}MB."
         )
     else:
-        analyze_video(detector=my_detector, upload=my_upload)
+        analyze_video(upload=my_upload, detector=my_detector, area=my_area)
 else:
     st.info("Please upload a video to get started!")

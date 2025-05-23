@@ -50,7 +50,13 @@ class OpenposePersonDetector:
         self.openpose.configure(params)
         self.openpose.start()
 
-    def detect(self, img: np.ndarray) -> Optional[np.ndarray]:
+    def detect(
+        self, img: np.ndarray, area: Optional[List[int]] = None
+    ) -> Optional[np.ndarray]:
+        if area:
+            left, top, right, bottom = area
+            img = img[top:bottom, left:right].copy()  # .copy() is crucial
+
         datum = op.Datum()
         datum.cvInputData = img
         self.openpose.emplaceAndPop(op.VectorDatum([datum]))

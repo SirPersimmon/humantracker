@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import List, Optional
 
 import cv2
 import numpy as np
@@ -25,6 +26,7 @@ class Analyzer:
         input_video_path: str = "",
         output_video_path: str = "",
         fourcc: str = "mp4v",
+        area: Optional[List[int]] = None,
     ) -> None:
         match detector_type:
             case DetectorType.YOLO:
@@ -55,8 +57,13 @@ class Analyzer:
             self.frame_size = (0, 0)
             self.frame_rate = 0
 
+        if area:
+            if area[1] > self.frame_size[0] or area[3] > self.frame_size[1]:
+                raise ValueError("Area extends beyond the frame border")
+
         self.output_video_path = output_video_path
         self.fourcc = fourcc
+        self.area = area
 
     def run(self) -> None:
         fourcc = cv2.VideoWriter_fourcc(*self.fourcc)
@@ -76,7 +83,7 @@ class Analyzer:
 
             frame_number += 1
 
-            detections = self.detector.detect(frame)
+            detections = self.detector.detect(frame, self.area)
 
             try:
                 bboxes, scores, _ = np.hsplit(detections, [4, 5])
@@ -87,7 +94,7 @@ class Analyzer:
                 scores = np.empty(0)
                 n_objects = 0
 
-            self.tracker.track(frame, bboxes, scores.flatten(), frame_number)
+            self.tracker.track(frame, bboxes, scores.flatten(), frame_number, self.area)
 
             output_video.write(frame)
 

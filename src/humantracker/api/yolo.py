@@ -1,6 +1,6 @@
 import os
 import pathlib
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 
 import numpy as np
 import torch
@@ -45,12 +45,18 @@ class YOLOPersonDetector:
             self.model.half()
 
     @torch.no_grad()
-    def detect(self, img: np.ndarray) -> Optional[np.ndarray]:
+    def detect(
+        self, img: np.ndarray, area: Optional[List[int]] = None
+    ) -> Optional[np.ndarray]:
         """
         Takes an input RGB image, preprocesses it and gets all person detections in the image,
         applies non-maximum suppression on the detected bounding boxes, and returns refined
         detections as a NumPy array
         """
+        if area:
+            left, top, right, bottom = area
+            img = img[top:bottom, left:right]
+
         # prepare the input image
         img, orig = self._preprocess(img)
         img = img.unsqueeze(0)

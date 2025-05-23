@@ -1,3 +1,5 @@
+from typing import List, Optional
+
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
@@ -36,6 +38,7 @@ class DeepSORTTracker:
         bboxes: np.ndarray,
         scores: np.ndarray,
         frame_number: int,
+        area: Optional[List[int]] = None,
     ) -> None:
         """
         Accepts an image and its YOLO detections, uses these detections and existing tracks to get a
@@ -48,11 +51,14 @@ class DeepSORTTracker:
         self.tracker.predict()
         self.tracker.update(dets, frame_number)
 
+        corr = area[:2] * 2 if area else [0] * 4
+
         # render the final tracked bounding boxes on the input frame
         for track in self.tracker.tracks:
             if not track.is_confirmed() or track.time_since_update > 1:
                 continue
             bbox = track.to_tlbr().astype(np.int32)
+            bbox = np.add(bbox, corr)
             color = self.colors[track.track_id % 20]
             # draw detection bounding box
             cv2.rectangle(frame, tuple(bbox[:2]), tuple(bbox[2:]), color, 2)
@@ -74,6 +80,9 @@ class DeepSORTTracker:
                 (0, 0, 0),
                 lineType=cv2.LINE_AA,
             )
+
+        if area:
+            cv2.rectangle(frame, tuple(area[:2]), tuple(area[2:]), (255, 255, 255), 1)
 
     def get_stats(self) -> dict[str, int]:
         return self.tracker.stats
