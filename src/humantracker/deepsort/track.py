@@ -92,7 +92,7 @@ class Track:
         return ret
 
     def to_tlbr(self):
-        """Get current position in bounding box format `(min x, miny, max x,
+        """Get current position in bounding box format `(min x, min y, max x,
         max y)`.
 
         Returns
