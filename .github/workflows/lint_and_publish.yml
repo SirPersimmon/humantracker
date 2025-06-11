@@ -1,0 +1,23 @@
+name: Lint code and publish Docker image
+
+on:
+  # push:
+  #   paths:
+  #     - .github/workflows/lint_and_publish.yml
+  #     - src/humantracker/api/*
+  #     - src/humantracker/*.py
+  #     - Dockerfile
+  workflow_dispatch:
+
+jobs:
+  lint-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Check Dockerfile
+      uses: hadolint/hadolint-action@v3.1.0
+      with:
+        dockerfile: Dockerfile
+    
+    
+      
