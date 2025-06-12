@@ -1,12 +1,13 @@
 name: Lint code and publish Docker image
 
 on:
-  # push:
-  #   paths:
-  #     - .github/workflows/lint_and_publish.yml
-  #     - src/humantracker/api/*
-  #     - src/humantracker/*.py
-  #     - Dockerfile
+  push:
+    paths:
+      - .github/workflows/lint_and_publish.yml
+      - src/humantracker/api/*
+      - src/humantracker/*.py
+      - Dockerfile
+      - Dockerfile.cpu-only
   workflow_dispatch:
 
 jobs:
