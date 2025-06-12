@@ -1,6 +1,6 @@
 FROM gcr.io/kaggle-gpu-images/python AS builder
 WORKDIR /app
-RUN --mount=target=/data,z /data/build-openpose.sh cpu
+RUN --mount=target=/data /data/build-openpose.sh cpu
 
 FROM gcr.io/kaggle-gpu-images/python
 
