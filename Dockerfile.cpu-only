@@ -1,6 +1,6 @@
 FROM gcr.io/kaggle-images/python AS builder
 WORKDIR /app
-RUN --mount=target=/data,z /data/build-openpose.sh cpu
+RUN --mount=target=/data /data/build-openpose.sh cpu
 
 FROM gcr.io/kaggle-images/python
 
@@ -16,7 +16,8 @@ COPY mars-small128.pb ./openpose/reids/
 COPY yolov7x.pt ./yolo/models/
 COPY ReID.pb ./yolo/reids/
 
-RUN apt update && apt install libgoogle-glog0v5 && \
+# hadolint ignore=DL3008
+RUN apt-get update && aptget install -y --no-install-recommends libgoogle-glog0v5 && \
     uv pip install --system pykalman streamlit && \
     git clone https://github.com/SirPersimmon/humantracker.git /tmp/humantracker && \
     mv /tmp/humantracker/src/humantracker . && \
