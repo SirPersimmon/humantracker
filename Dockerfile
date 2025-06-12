@@ -16,7 +16,8 @@ COPY mars-small128.pb ./openpose/reids/
 COPY yolov7x.pt ./yolo/models/
 COPY ReID.pb ./yolo/reids/
 
-RUN apt-get update && apt-get install libgoogle-glog0v5 && \
+# hadolint ignore=DL3008
+RUN apt-get update && apt-get install -y --no-install-recommends libgoogle-glog0v5 && \
     uv pip install --system pykalman streamlit && \
     git clone https://github.com/SirPersimmon/humantracker.git /tmp/humantracker && \
     mv /tmp/humantracker/src/humantracker . && \
