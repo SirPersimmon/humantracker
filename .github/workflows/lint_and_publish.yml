@@ -18,6 +18,10 @@ jobs:
       uses: hadolint/hadolint-action@v3.1.0
       with:
         dockerfile: Dockerfile
+    - name: Check CPU Dockerfile
+      uses: hadolint/hadolint-action@v3.1.0
+      with:
+        dockerfile: Dockerfile.cpu-only
     
     
       
