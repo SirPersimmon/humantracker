@@ -38,6 +38,9 @@ jobs:
       uses: hadolint/hadolint-action@v3.1.0
       with:
         dockerfile: Dockerfile.cpu-only
+
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile
     
     
       
