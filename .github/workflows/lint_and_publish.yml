@@ -40,7 +40,7 @@ jobs:
         dockerfile: Dockerfile.cpu-only
 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile
+      run: docker build . --file Dockerfile.cpu-only
     
     
       
