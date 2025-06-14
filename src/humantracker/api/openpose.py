@@ -15,7 +15,7 @@ if op_path not in sys.path:
     sys.path.append(op_path)
 del op_path
 
-from openpose import pyopenpose as op
+from openpose import pyopenpose as op  # noqa: E402
 
 
 NMS_MAX_OVERLAP = 1.0
@@ -66,7 +66,7 @@ class OpenposePersonDetector:
         # Doesn't use keypoint confidence.
         try:
             poses = keypoints[:, :, :2]
-        except:
+        except:  # noqa: E722
             return None
 
         # Get (nonempty) containing box for each seen body.
@@ -118,7 +118,8 @@ class OpenposePersonDetector:
         scores: Optional[np.ndarray] = None,
     ) -> List[int]:
         """Suppress overlapping detections.
-        Original code from http://www.pyimagesearch.com/2015/02/16/faster-non-maximum-suppression-python
+        Original code from
+        http://www.pyimagesearch.com/2015/02/16/faster-non-maximum-suppression-python
         has been adapted to include confidence score.
 
         Parameters
