@@ -12,8 +12,9 @@ import deepsort.tracker
 
 class DeepSORTTracker:
     """
-    DeepSORT tracker wrapper, exposing 2 methods, first receives an image and its detections to
-    refine them using existing tracks, and second return stats.
+    DeepSORT tracker wrapper, exposing 2 methods, first receives
+    an image and its detections to refine them using existing tracks,
+    and second return stats.
     """
 
     def __init__(
@@ -45,8 +46,9 @@ class DeepSORTTracker:
         area: Optional[List[int]] = None,
     ) -> None:
         """
-        Accepts an image and its YOLO detections, uses these detections and existing tracks to get a
-        final set of bounding boxes, which are then drawn onto the input image
+        Accepts an image and its YOLO detections, uses these detections
+        and existing tracks to get a final set of bounding boxes,
+        which are then drawn onto the input image
         """
         feats = self.encoder(frame, bboxes)
         dets = [
