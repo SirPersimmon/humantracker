@@ -109,8 +109,10 @@ st.set_page_config(layout="wide", page_title="Human Tracker")
 st.write("## Human Tracker")
 st.write(
     """Try uploading a video to track human in it.
-    This code is open source and available [here](https://github.com/SirPersimmon/humantracker) on GitHub.
-    Special thanks to the [YOLOv7-DeepSORT-Human-Tracking](https://github.com/dasupradyumna/YOLOv7-DeepSORT-Human-Tracking)
+    This code is open source and available
+    [here](https://github.com/SirPersimmon/humantracker) on GitHub.
+    Special thanks to the
+    [YOLOv7-DeepSORT-Human-Tracking](https://github.com/dasupradyumna/YOLOv7-DeepSORT-Human-Tracking)
     and [liveposetracker](https://github.com/ortegatron/liveposetracker).
     """
 )
