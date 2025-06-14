@@ -9,9 +9,9 @@ import torch
 
 torch.classes.__path__ = []
 
-import streamlit as st # noqa: E402
+import streamlit as st  # noqa: E402
 
-import analyzer # noqa: E402
+import analyzer  # noqa: E402
 
 
 MAX_FILE_SIZE = 100 * 1024 * 1024  # 100MB
