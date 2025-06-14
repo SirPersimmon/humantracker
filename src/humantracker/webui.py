@@ -9,9 +9,9 @@ import torch
 
 torch.classes.__path__ = []
 
-import streamlit as st
+import streamlit as st # noqa: E402
 
-import analyzer
+import analyzer # noqa: E402
 
 
 MAX_FILE_SIZE = 100 * 1024 * 1024  # 100MB
@@ -143,7 +143,8 @@ with st.sidebar:
 if my_upload is not None:
     if my_upload.size > MAX_FILE_SIZE:
         st.error(
-            f"The uploaded file is too large. Please upload a video smaller than {MAX_FILE_SIZE/1024/1024:.1f}MB."
+            f"The uploaded file is too large."
+            f"Please upload a video smaller than {MAX_FILE_SIZE/1024/1024:.1f}MB."
         )
     else:
         analyze_video(upload=my_upload, detector=my_detector, area=my_area)
