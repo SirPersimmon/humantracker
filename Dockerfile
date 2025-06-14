@@ -12,9 +12,9 @@ ENV YOLO_PATH="/app/yolo"
 COPY --from=builder /app/openpose/build ./openpose/build
 COPY --from=builder /app/openpose/models ./openpose/models
 
-COPY mars-small128.pb ./openpose/reids/
-COPY yolov7x.pt ./yolo/models/
-COPY ReID.pb ./yolo/reids/
+COPY models/mars-small128.pb ./openpose/reids/
+COPY models/yolov7x.pt ./yolo/models/
+COPY models/ReID.pb ./yolo/reids/
 
 # hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y --no-install-recommends libgoogle-glog0v5 && \
