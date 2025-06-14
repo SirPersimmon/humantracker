@@ -49,8 +49,10 @@ class YOLOPersonDetector:
         self, img: np.ndarray, area: Optional[List[int]] = None
     ) -> Optional[np.ndarray]:
         """
-        Takes an input RGB image, preprocesses it and gets all person detections in the image,
-        applies non-maximum suppression on the detected bounding boxes, and returns refined
+        Takes an input RGB image, preprocesses it and
+        gets all person detections in the image,
+        applies non-maximum suppression on the
+        detected bounding boxes, and returns refined
         detections as a NumPy array
         """
         if area:
@@ -74,7 +76,8 @@ class YOLOPersonDetector:
 
     def _preprocess(self, img: np.ndarray) -> Tuple[torch.Tensor, np.ndarray]:
         """
-        - Modifies the input's resolution to a standard size while maintaining its aspect ratio
+        - Modifies the input's resolution to a standard size while
+        maintaining its aspect ratio
         - Changes the order of values from (H,W,C) to (C,H,W)
         - Transforms the color range from (0,255) to (0,1)
 
