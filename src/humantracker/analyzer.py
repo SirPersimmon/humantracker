@@ -88,11 +88,9 @@ class Analyzer:
             try:
                 bboxes, scores, _ = np.hsplit(detections, [4, 5])
                 bboxes[:, 2:] = bboxes[:, 2:] - bboxes[:, :2]
-                n_objects = detections.shape[0]
             except ValueError:
                 bboxes = np.empty(0)
                 scores = np.empty(0)
-                n_objects = 0
 
             self.tracker.track(frame, bboxes, scores.flatten(), frame_number, self.area)
 
